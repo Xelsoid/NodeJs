@@ -1,0 +1,23 @@
+{
+  "name": "nodejs",
+  "version": "1.0.0",
+  "description": "NodeJs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "task-1": "node task1.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Xelsoid/NodeJs.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Xelsoid/NodeJs/issues"
+  },
+  "homepage": "https://github.com/Xelsoid/NodeJs#readme",
+  "dependencies": {
+    "csvtojson": "^2.0.10"
+  }
+}
