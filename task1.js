@@ -10,4 +10,3 @@ process.stdin.on('data', (string) => {
   string = array.join('');
   return process.stdout.write(string);
 });
-
