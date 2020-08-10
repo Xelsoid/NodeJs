@@ -2,9 +2,12 @@
 import fs from "fs";
 import csvtojson from "csvtojson";
 
-const csvFilePath='data.csv';
+const csvFilePath = 'data.csv';
 
 csvtojson()
+    .on('error',(error)=>{
+      console.log(error)
+    })
     .fromFile(csvFilePath)
     .then((jsonObj) => {
 
@@ -18,6 +21,4 @@ csvtojson()
         console.log(error);
       })
     })
-    .catch((error) => {
-      console.log(error);
-    });
+    .catch(console.log("Something gone wrong"));
