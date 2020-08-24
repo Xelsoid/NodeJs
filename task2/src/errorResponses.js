@@ -12,4 +12,3 @@ const RESPONSES = {
   userList: `Please find user's list. ${GOBACKLINK}`,
 };
 module.exports = RESPONSES;
-
