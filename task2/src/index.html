@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    Create user
+    <form action="/create_user" method="post">
+        <input name="userName" value="" placeholder="user name">
+        <input name="userPassword" value="" placeholder="user password">
+        <input name="userAge" value="" placeholder="user age">
+        <input type="submit" value="Create User">
+    </form>
+
+    Update user
+    <form action="/update_user" method="post">
+        <input name="userName" value="" placeholder="user name">
+        <input name="userPassword" value="" placeholder="user old password">
+        <input name="userNewPassword" value="" placeholder="user new password">
+        <input name="userAge" value="" placeholder="user age">
+        <input type="submit" value="Update User">
+    </form>
+
+    Delete user
+    <form action="/delete_user" method="post">
+        <input name="userName" value="" placeholder="user name">
+        <input name="userPassword" value="" placeholder="user password">
+        <input type="submit" value="Delete User">
+    </form>
+
+    Find user by login
+    <form action="/find_users" method="post">
+        <input name="userName" value="" placeholder="user name">
+        <input name="userLimit" value="" placeholder="user limit">
+        <input type="submit" value="Find Users">
+    </form>
+
+    Get user by ID
+    <form action="/get_user" method="post">
+        <input name="userId" value="" placeholder="user ID">
+        <input type="submit" value="Get User">
+    </form>
+</body>
+</html>
