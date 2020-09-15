@@ -6,13 +6,11 @@ const RESPONSES = {
   },
   deleteUser: {
     deleted: `The user deleted. ${GOBACKLINK}`,
-    wrongPasswordEntered: `The password doesn't match. Cannot delete user. ${GOBACKLINK}`,
-    notExists: `The user doesn't exist. ${GOBACKLINK}`
+    notExists: `The user doesn't exist or wrong password entered. ${GOBACKLINK}`,
   },
   updateUser: {
     userUpdated: `The user info updated. ${GOBACKLINK}`,
-    userNotUpdated: `The password doesn't match. Cannot update user. ${GOBACKLINK}`,
-    notExists: `The user doesn't exist. ${GOBACKLINK}`
+    userNotUpdated: `The user doesn't exist or the password doesn't match. Cannot update user. ${GOBACKLINK}`,
   },
   findUsers: {
     usersList: `Please find user's list. ${GOBACKLINK}`,
@@ -20,7 +18,7 @@ const RESPONSES = {
   },
   getUser: {
     usersExists: `Information about user by ID. ${GOBACKLINK}`,
-    usersNotFound: `Users not found. ${GOBACKLINK}`,
+    usersNotFound: `User with such ID not found. ${GOBACKLINK}`,
   },
 };
 

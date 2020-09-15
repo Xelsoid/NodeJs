@@ -1,103 +1,88 @@
-const UserModel = require('../models/index');
-const DataBase = require('../data-access/index');
-
-const getAutoSuggestUsers = (users, loginSubstring, limit) => {
-  const regexp = new RegExp(loginSubstring, 'i');
-  const usersFiltered = users.filter((user) => regexp.test(user.login));
-  usersFiltered.length = limit;
-  return usersFiltered;
-};
-
-const checkAndReturnItemIfExists = (dataBase, itemName, value) => dataBase.find((item) => (item[itemName] === value));
+const uuid = require('uuid');
+const { User } = require('../data-access/index');
+const { Op } = require("sequelize");
 
 module.exports = class UserService {
-  static createUser(userName, userPassword, userAge) {
-    let result;
-    const users = DataBase.getDB('users');
-    const userItem = checkAndReturnItemIfExists(users, 'login', userName);
-
-    if(!userItem) {
-      const user = UserModel.create(userName, userPassword, userAge);
-      DataBase.pushItemToDB(users, user);
-      result = 'created';
-    } else {
-      if(userItem.isDeleted) {
-        UserModel.restore(userItem, userPassword, userAge);
-        result = 'created';
-      } else {
-        result = 'exists';
+  static async createUser(userData) {
+    const [user, created] = await User.findOrCreate({
+      where: {
+        login: userData.userName,
+      },
+      defaults: {
+        password: userData.userPassword,
+        age: userData.userAge,
+        id: uuid.v4(),
+        isdeleted: false,
       }
+    });
+    if(created) {
+      return 'created';
     }
-    console.log('Created', users);
-    return result;
+    if(user.getDataValue('isdeleted')) {
+      await User.update({
+        password: userData.userPassword,
+        age: userData.userAge,
+        isdeleted: false,
+      });
+      return 'created';
+    }
+    return 'exists';
   }
 
-  static deleteUser(userName, userPassword, userAge) {
-    let result;
-    const users = DataBase.getDB('users');
-    const userItem = checkAndReturnItemIfExists(users, 'login', userName);
-
-    if(!userItem) {
-      result = 'notExists';
-    } else {
-      if(userItem.password === userPassword) {
-        UserModel.delete(userItem);
-        result = 'deleted';
-      } else {
-        result = 'wrongPasswordEntered';
+  static async deleteUser(userData) {
+    const [user] = await User.update({ isdeleted: true }, {
+      where: {
+        login: userData.userName,
+        password: userData.userPassword,
       }
-    }
-    console.log('Deleted', users);
-    return result;
+    });
+
+    return user ? 'deleted' : 'notExists';
   }
 
-  static updateUser(userName, userPassword, userNewPassword, userAge) {
-    let result;
-    const users = DataBase.getDB('users');
-    const userItem = checkAndReturnItemIfExists(users, 'login', userName);
-
-    if(!userItem) {
-      result = 'notExists';
-    } else {
-      if(userItem.password === userPassword) {
-        const password = userNewPassword || userItem.password;
-        const age = userAge || userItem.age;
-        UserModel.update(userItem, password, age);
-        result = 'userUpdated'
-      } else {
-        result = 'userNotUpdated'
+  static async updateUser(userData) {
+    const [user] = await User.update({
+      password: userData.userNewPassword,
+      age: userData.userAge,
+    }, {
+      where: {
+        login: userData.userName,
+        password: userData.userPassword,
       }
-    }
-    console.log('Updated', users);
-    return result;
+    });
+
+    return user ? 'userUpdated' : 'userNotUpdated';
   }
 
-  static findUsers(userName, userLimit) {
-    let result;
-    const users = DataBase.getDB('users');
-    const usersFiltered = getAutoSuggestUsers(users, userName, userLimit);
+  static async findUsers(userData) {
+    const users = await User.findAll({
+      where: {
+        login: {
+          [Op.substring]: userData.userName
+        }
+      },
+      limit: userData.userLimit
+    });
 
-    if (usersFiltered && usersFiltered.length) {
-      const usersList = UserModel.returnUsersList(usersFiltered);
-      result = {result: 'usersList', data: usersList};
-    } else {
-      result = {result: 'usersNotFound', data: ''};
+    if(users) {
+      let htmlString;
+      users.forEach((user) => {
+        htmlString +=
+          `<p>User login:${user.getDataValue('login')}; 
+            User id ${user.getDataValue('id')}; 
+            User age ${user.getDataValue('age')}
+          </p>`;
+      });
+      return {result: 'usersList', data: htmlString};
     }
-    return result;
+    return {result: 'usersNotFound', data: ''};
   }
 
-  static getUser(userId) {
-    let result;
-    const users = DataBase.getDB('users');
-    const userItem = checkAndReturnItemIfExists(users, 'id', userId);
+  static async getUser(userData) {
+    const user = await User.findByPk(userData.userId);
 
-    if(!userItem) {
-      result = {result: 'usersNotFound', data: ''};
-    } else {
-      const userString = UserModel.returnUser(userItem);
-      result = {result: 'usersExists', data: userString};
-    }
-    console.log('Deleted', users);
-    return result;
+     return user
+       ? {result: 'usersExists', data: `<strong>user login : ${user.getDataValue('login')} user age: ${user.getDataValue('age')}</strong>`}
+       : {result: 'usersNotFound', data: ''}
   }
 };
