@@ -8,6 +8,7 @@
     "task1_2": "nodemon --exec babel-node ./task1/task2.js",
     "task1_2_2": "nodemon --exec babel-node ./task1/task2_2.js",
     "task2_1": "nodemon ./task2/task2.js",
+    "task3_1": "nodemon ./task3/task3.js",
     "lint": "eslint ./task2",
     "lint:fix": "eslint ./task2 --fix"
   },
@@ -30,6 +31,9 @@
     "express": "^4.17.1",
     "express-joi-validation": "^4.0.4-beta.0",
     "joi": "^17.2.1",
+    "pg": "^8.3.3",
+    "pg-hstore": "^2.3.3",
+    "sequelize": "^6.3.5",
     "uuid": "^8.3.0"
   },
   "devDependencies": {
