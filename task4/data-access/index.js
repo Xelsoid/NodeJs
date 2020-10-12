@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize');
-const UserModel = require('../models/index');
+const UserModel = require('../models/user');
+const GroupModel = require('../models/group');
 
 const sequelize = new Sequelize('postgres', 'postgres', '1234', {
   host: 'localhost',
@@ -16,11 +17,12 @@ const sequelize = new Sequelize('postgres', 'postgres', '1234', {
 });
 
 const User = UserModel(sequelize, Sequelize);
+const Group = GroupModel(sequelize, Sequelize);
 sequelize.sync({ force: true })
   .then(() => {
     console.log(`Database & tables created!`)
   });
 
 module.exports = {
-  User
+  User, Group
 };
