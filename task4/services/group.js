@@ -27,19 +27,13 @@ module.exports = class GroupService {
   }
 
   static async deleteGroup(groupData) {
-    console.log(groupData.groupName);
-    try {
-      const [group] = await Group.destroy({
-        where: {
-          name: groupData.groupName
-        }
-      });
-      console.log(group);
-      return group ? 'deleted' : 'notExists';
-    }
-    catch(e) {
-      console.log(e);
-    }
+    const group = await Group.destroy({
+      where: {
+        name: groupData.groupName
+      }
+    });
+    console.log(group);
+    return group ? 'deleted' : 'notExists';
   }
 
   static async getGroup(groupData) {
