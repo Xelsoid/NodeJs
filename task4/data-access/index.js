@@ -1,7 +1,8 @@
 const Sequelize = require('sequelize');
 const UserModel = require('../models/user');
 const GroupModel = require('../models/group');
-const UserGroupMTM = require('../models/userGroup');
+const { MockedUsers, MockedGroups } = require('../mockedData');
+const UserService = require('../services/usergroup');
 
 const sequelize = new Sequelize('postgres', 'postgres', '1234', {
   host: 'localhost',
@@ -19,16 +20,18 @@ const sequelize = new Sequelize('postgres', 'postgres', '1234', {
 
 const User = UserModel(sequelize, Sequelize);
 const Group = GroupModel(sequelize, Sequelize);
-const UserGroup = UserGroupMTM(sequelize, Sequelize);
-User.belongsToMany(Group, { through: UserGroup });
-Group.belongsToMany(User, { through: UserGroup });
-User.hasMany(UserGroup);
-Group.hasMany(UserGroup);
+User.belongsToMany(Group, { through: 'UserGroup', unique: false });
+Group.belongsToMany(User, { through: 'UserGroup', unique: false });
 
-sequelize.sync({ force: true })
-  .then(() => {
-    console.log(`Database & tables created!`)
+sequelize.sync({ force: true }).then(async () => {
+  await sequelize.transaction(async (t) => {
+    return Group.create(MockedGroups, {transaction: t});
   });
+
+  await sequelize.transaction(async (t) => {
+    return User.bulkCreate(MockedUsers, {transaction: t});
+  }).then((users) => {UserService.addUsersToGroup(users, Group)});
+});
 
 module.exports = {
   User, Group
