@@ -42,6 +42,10 @@ const RESPONSES = {
     groupsList: `Please find group's list. ${GOBACKLINK}`,
     groupsNotFound: `Groups not found. ${GOBACKLINK}`,
   },
+  addUserToGroups: {
+    userGroupAdded: `User added to group. ${GOBACKLINK}`,
+    userGroupNotAdded: `Smth gone wrong. ${GOBACKLINK}`,
+  },
 };
 
 module.exports = RESPONSES;

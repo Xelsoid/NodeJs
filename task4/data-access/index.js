@@ -2,7 +2,6 @@ const Sequelize = require('sequelize');
 const UserModel = require('../models/user');
 const GroupModel = require('../models/group');
 const { MockedUsers, MockedGroups } = require('../mockedData');
-const UserService = require('../services/usergroup');
 
 const sequelize = new Sequelize('postgres', 'postgres', '1234', {
   host: 'localhost',
@@ -30,7 +29,13 @@ sequelize.sync({ force: true }).then(async () => {
 
   await sequelize.transaction(async (t) => {
     return User.bulkCreate(MockedUsers, {transaction: t});
-  }).then((users) => {UserService.addUsersToGroup(users, Group)});
+  }).then((users) => {
+    Group.findAll().then((groups) => {
+      groups.forEach((group) => {
+        group.setUsers(users).then(console.log('users! added'))
+      });
+    });
+  });
 });
 
 module.exports = {

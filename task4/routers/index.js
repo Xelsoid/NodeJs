@@ -13,6 +13,7 @@ const {
 } = require('../validation/index');
 const UserService = require('../services/user');
 const GroupService = require('../services/group');
+const GroupUserService = require('../services/usergroup');
 
 index.post('/create_user', (req, res) => {
   const responsePromise = UserService.createUser(req.body);
@@ -66,6 +67,11 @@ index.post('/get_group', (req, res) => {
 index.post('/get_groups', (req, res) => {
   const responsePromise = GroupService.getGroups(req.body);
   responsePromise.then((response) => res.send(RESPONSES.getGroups[response.result] + response.data));
+});
+
+index.post('/add_users_to_group', (req, res) => {
+  const responsePromise = GroupUserService.addUsersToGroup(req.body.groupId, req.body.userId);
+  responsePromise.then((response) => res.send(RESPONSES.addUserToGroups[response]));
 });
 
 index.use('/', (req, res) => {
