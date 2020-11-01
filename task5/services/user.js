@@ -1,6 +1,8 @@
 const uuid = require('uuid');
 const { User } = require('../data-access/index');
 const { Op } = require("sequelize");
+const { CommonLogger } = require('../logger');
+const logger = new CommonLogger('user-service', process.env.NODE_ENV);
 
 module.exports = class UserService {
   static async createUser(userData) {
@@ -16,6 +18,7 @@ module.exports = class UserService {
       }
     });
     if(created) {
+      logger.info('createUser method invoked, user created', userData);
       return 'created';
     }
     if(user.getDataValue('isdeleted')) {
@@ -24,8 +27,10 @@ module.exports = class UserService {
         age: userData.userAge,
         isdeleted: false,
       });
+      logger.info('createUser method invoked, user created', userData);
       return 'created';
     }
+    logger.info('createUser method invoked, user exists', userData);
     return 'exists';
   }
 
@@ -36,7 +41,7 @@ module.exports = class UserService {
         password: userData.userPassword,
       }
     });
-
+    logger.info(`deleteUser method invoked, user ${user ? 'deleted' : 'notExists'}`, userData);
     return user ? 'deleted' : 'notExists';
   }
 
@@ -51,6 +56,7 @@ module.exports = class UserService {
       }
     });
 
+    logger.info(`deleteUser method invoked, user ${user ? 'userUpdated' : 'userNotUpdated'}`, userData);
     return user ? 'userUpdated' : 'userNotUpdated';
   }
 
@@ -73,14 +79,17 @@ module.exports = class UserService {
             User age ${user.getDataValue('age')}
           </p>`;
       });
+      logger.info(`findUsers method invoked, usersList ${htmlString}`, userData);
       return {result: 'usersList', data: htmlString};
     }
+    logger.info(`findUsers method invoked, usersNotFound`, userData);
     return {result: 'usersNotFound', data: ''};
   }
 
   static async getUser(userData) {
     const user = await User.findByPk(userData.userId);
 
+    logger.info(`getUser method invoked, ${user ? 'usersExists' : 'usersNotFound'}`, userData);
      return user
        ? {result: 'usersExists', data: `<strong>user login : ${user.getDataValue('login')} user age: ${user.getDataValue('age')}</strong>`}
        : {result: 'usersNotFound', data: ''}

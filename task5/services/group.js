@@ -1,6 +1,7 @@
 const uuid = require('uuid');
 const { Group } = require('../data-access/index');
-const { Op } = require("sequelize");
+const { CommonLogger } = require('../logger');
+const logger = new CommonLogger('group-service', process.env.NODE_ENV);
 
 module.exports = class GroupService {
   static async createGroup(groupData) {
@@ -14,6 +15,7 @@ module.exports = class GroupService {
       }
     });
     if(created) {
+      logger.info('createGroup method invoked, group created', groupData);
       return 'created';
     }
     await Group.update({
@@ -23,6 +25,7 @@ module.exports = class GroupService {
         name: groupData.groupName,
       },
     });
+    logger.info('createGroup method invoked, group updated', groupData);
     return 'updated';
   }
 
@@ -32,13 +35,14 @@ module.exports = class GroupService {
         name: groupData.groupName
       }
     });
-    console.log(group);
+    logger.info(`deleteGroup method invoked, group ${group ? 'deleted' : 'notExists'}`, groupData);
     return group ? 'deleted' : 'notExists';
   }
 
   static async getGroup(groupData) {
     const group = await Group.findByPk(groupData.groupId);
 
+    logger.info(`getGroup method invoked, ${group ? 'groupExists' : 'groupNotFound'}`, groupData);
     return group
       ? {result: 'groupExists', data: `<strong>group name : ${group.getDataValue('name')}</strong>`}
       : {result: 'groupNotFound', data: ''}
@@ -57,8 +61,10 @@ module.exports = class GroupService {
             Group permissions ${group.getDataValue('permissions')}
           </p>`;
       });
+      logger.info(`getGroups method invoked, groupsList ${htmlString}`, groupData);
       return {result: 'groupsList', data: htmlString};
     }
+    logger.info(`getGroups method invoked, groupsNotFound`, groupData);
     return {result: 'groupsNotFound', data: ''};
   }
 
