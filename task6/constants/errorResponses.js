@@ -46,6 +46,9 @@ const RESPONSES = {
     userGroupAdded: `User added to group. ${GOBACKLINK}`,
     userGroupNotAdded: `Smth gone wrong. ${GOBACKLINK}`,
   },
+  login: {
+    logged: `Login is successful. ${GOBACKLINK}`,
+  }
 };
 
 module.exports = RESPONSES;

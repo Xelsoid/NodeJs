@@ -1,8 +1,31 @@
 const uuid = require('uuid');
 const { User } = require('../data-access/index');
 const { Op } = require("sequelize");
+const jwt = require('jsonwebtoken');
+const secretKey = require('../constants/token');
 
 module.exports = class UserService {
+  static async login(userData) {
+    const user = await User.findOne({
+      where: {
+        login: userData.userName
+      }
+    });
+
+    if (user) {
+      if (userData.userPassword !== user.password) {
+        return {status: 401, token: false, message: 'Wrong password'};
+      }
+
+      const token = jwt.sign({ id: user.id }, secretKey, {
+        expiresIn: 1200000,
+      });
+      return {status: 200, token: token, message: 'logged'};
+    } else {
+      return {status: 404, token: false, message: 'User not found'};
+    }
+  }
+
   static async createUser(userData) {
     const [user, created] = await User.findOrCreate({
       where: {
