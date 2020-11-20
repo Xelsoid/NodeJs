@@ -11,6 +11,7 @@
     "task3_1": "nodemon ./task3/task3.js",
     "task4_1": "nodemon ./task4/task4.js",
     "task5_1": "nodemon ./task5/task5.js",
+    "task6_1": "nodemon ./task6/task6.js",
     "lint": "eslint ./task2",
     "lint:fix": "eslint ./task2 --fix"
   },
@@ -33,6 +34,7 @@
     "express": "4.17.1",
     "express-joi-validation": "4.0.4-beta.0",
     "joi": "17.2.1",
+    "jsonwebtoken": "^8.5.1",
     "pg": "8.3.3",
     "pg-hstore": "2.3.3",
     "sequelize": "6.3.5",
