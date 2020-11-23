@@ -12,6 +12,7 @@
     "task4_1": "nodemon ./task4/task4.js",
     "task5_1": "nodemon ./task5/task5.js",
     "task6_1": "nodemon ./task6/task6.js",
+    "task7_1": "nodemon ./task7/task7.js",
     "lint": "eslint ./task2",
     "lint:fix": "eslint ./task2 --fix"
   },
