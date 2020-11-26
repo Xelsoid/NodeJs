@@ -1,3 +1,5 @@
+import { expect } from '@jest/globals';
+
 const { UserMock } = require('../data-access/mockedSequelize');
 const UserService = require('./user');
 
@@ -5,12 +7,34 @@ const userService = new UserService(UserMock);
 
 describe("User service", () => {
   it("check createUser method", () => {
-    console.log(UserService);
-    const body = {
-      login: "Anton",
+    const userData = {
+      userName: "testUser",
+      userPassword: "testPassword",
+    };
+    const responsePromise = userService.createUser(userData);
+    return responsePromise.then((response) =>
+      expect(response).toBe('created')
+    )
+  });
+
+  it("check deleteUser method (delete)", () => {
+    const userData = {
+      userName: "Anton",
       userPassword: "qwerty",
     };
-    const responsePromise = userService.createUser(body);
-    responsePromise.then((response) => console.log(response))
+    const responsePromise = userService.deleteUser(userData);
+    return responsePromise.then((response) =>
+      expect(response).toBe('deleted')
+    )
+  });
+  it("check deleteUser method (not delete)", () => {
+    const userData = {
+      userName: "Anton",
+      userPassword: "qwerty1",
+    };
+    const responsePromise = userService.deleteUser(userData);
+    return responsePromise.then((response) =>
+      expect(response).toBe('notExists')
+    )
   });
 });

@@ -61,9 +61,7 @@
     "jest-cli": "^26.6.3"
   },
   "jest": {
-    "verbose": true,
-    "automock": false,
-    "scriptPreprocessor": "<rootDir>/node_modules/babel-jest",
+    "transform": {".*": "<rootDir>/node_modules/babel-jest"},
     "testRegex": "(/__tests__/.*|(\\.|/)(test))\\.(js|ts|tsx)?$"
   }
 }
