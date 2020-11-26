@@ -1,12 +1,15 @@
 const uuid = require('uuid');
-const { User } = require('../data-access/index');
 const { Op } = require("sequelize");
 const jwt = require('jsonwebtoken');
 const secretKey = require('../constants/token');
 
 module.exports = class UserService {
-  static async login(userData) {
-    const user = await User.findOne({
+  constructor(User) {
+    this.user = User;
+  }
+
+  async login(userData) {
+    const user = await this.user.findOne({
       where: {
         login: userData.userName
       }
@@ -26,8 +29,8 @@ module.exports = class UserService {
     }
   }
 
-  static async createUser(userData) {
-    const [user, created] = await User.findOrCreate({
+  async createUser(userData) {
+    const [user, created] = await this.user.findOrCreate({
       where: {
         login: userData.userName,
       },
@@ -42,7 +45,7 @@ module.exports = class UserService {
       return 'created';
     }
     if(user.getDataValue('isdeleted')) {
-      await User.update({
+      await this.user.update({
         password: userData.userPassword,
         age: userData.userAge,
         isdeleted: false,
@@ -52,8 +55,8 @@ module.exports = class UserService {
     return 'exists';
   }
 
-  static async deleteUser(userData) {
-    const [user] = await User.update({ isdeleted: true }, {
+  async deleteUser(userData) {
+    const [user] = await this.user.update({ isdeleted: true }, {
       where: {
         login: userData.userName,
         password: userData.userPassword,
@@ -62,8 +65,8 @@ module.exports = class UserService {
     return user ? 'deleted' : 'notExists';
   }
 
-  static async updateUser(userData) {
-    const [user] = await User.update({
+  async updateUser(userData) {
+    const [user] = await this.user.update({
       password: userData.userNewPassword,
       age: userData.userAge,
     }, {
@@ -76,8 +79,8 @@ module.exports = class UserService {
     return user ? 'userUpdated' : 'userNotUpdated';
   }
 
-  static async findUsers(userData) {
-    const users = await User.findAll({
+  async findUsers(userData) {
+    const users = await this.user.findAll({
       where: {
         login: {
           [Op.substring]: userData.userName
@@ -100,8 +103,8 @@ module.exports = class UserService {
     return {result: 'usersNotFound', data: ''};
   }
 
-  static async getUser(userData) {
-    const user = await User.findByPk(userData.userId);
+  async getUser(userData) {
+    const user = await this.user.findByPk(userData.userId);
 
      return user
        ? {result: 'usersExists', data: `<strong>user login : ${user.getDataValue('login')} user age: ${user.getDataValue('age')}</strong>`}

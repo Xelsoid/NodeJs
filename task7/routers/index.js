@@ -15,44 +15,46 @@ const UserService = require('../services/user');
 const GroupService = require('../services/group');
 const GroupUserService = require('../services/usergroup');
 const Authorization = require('../services/autorization');
+const { User } = require('../data-access/index');
+const userService = new UserService(User);
 
 index.post('/authenticate', (req, res, next) => {
-  const responsePromise = UserService.login(req.body);
+  const responsePromise = userService.login(req.body);
   responsePromise
     .then((response) => res.status(response.status).send({message: response.message, token: response.token }))
     .catch((err) => {next(err)});
 });
 
 index.post('/create_user', (req, res, next) => {
-  const responsePromise = UserService.createUser(req.body);
+  const responsePromise = userService.createUser(req.body);
   responsePromise
     .then((response) => res.send(RESPONSES.createUser[response]))
     .catch((err) => {next(err)});
 });
 
 index.post('/delete_user', Authorization.checkToken, (req, res, next) => {
-  const responsePromise = UserService.deleteUser(req.body);
+  const responsePromise = userService.deleteUser(req.body);
   responsePromise
     .then((response) => res.send(RESPONSES.deleteUser[response]))
     .catch((err) => {next(err)});
 });
 
 index.post('/update_user', Authorization.checkToken, (req, res, next) => {
-  const responsePromise = UserService.updateUser(req.body);
+  const responsePromise = userService.updateUser(req.body);
   responsePromise
     .then((response) => res.send(RESPONSES.updateUser[response]))
     .catch((err) => {next(err)});
 });
 
 index.post('/find_users', (req, res, next) => {
-  const responsePromise = UserService.findUsers(req.body);
+  const responsePromise = userService.findUsers(req.body);
   responsePromise
     .then((response) => res.send(RESPONSES.findUsers[response.result] + response.data))
     .catch((err) => {next(err)});
 });
 
 index.post('/get_user', (req, res, next) => {
-  const responsePromise = UserService.getUser(req.body);
+  const responsePromise = userService.getUser(req.body);
   responsePromise
     .then((response) => res.send(RESPONSES.getUser[response.result] + response.data))
     .catch((err) => {next(err)});
