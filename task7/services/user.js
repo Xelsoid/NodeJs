@@ -41,10 +41,12 @@ module.exports = class UserService {
         isdeleted: false,
       }
     });
+
     if(created) {
       return 'created';
     }
-    if(user.getDataValue('isdeleted')) {
+
+    if(user.get('isdeleted')) {
       await this.user.update({
         password: userData.userPassword,
         age: userData.userAge,
