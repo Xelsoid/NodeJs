@@ -15,8 +15,9 @@ const UserService = require('../services/user');
 const GroupService = require('../services/group');
 const GroupUserService = require('../services/usergroup');
 const Authorization = require('../services/autorization');
-const { User } = require('../data-access/index');
+const { User, Group } = require('../data-access/index');
 const userService = new UserService(User);
+const groupService = new GroupService(Group);
 
 index.post('/authenticate', (req, res, next) => {
   const responsePromise = userService.login(req.body);
@@ -63,35 +64,35 @@ index.post('/get_user', (req, res, next) => {
 // GROUPS!!
 
 index.post('/create_group', Authorization.checkToken, (req, res, next) => {
-  const responsePromise = GroupService.createGroup(req.body);
+  const responsePromise = groupService.createGroup(req.body);
   responsePromise
     .then((response) => res.send(RESPONSES.createGroup[response]))
     .catch((err) => {next(err)});
 });
 
 index.post('/update_group', Authorization.checkToken, (req, res, next) => {
-  const responsePromise = GroupService.updateGroup(req.body);
+  const responsePromise = groupService.updateGroup(req.body);
   responsePromise
     .then((response) => res.send(RESPONSES.updateGroup[response]))
     .catch((err) => {next(err)});
 });
 
 index.post('/delete_group', Authorization.checkToken, (req, res, next) => {
-  const responsePromise = GroupService.deleteGroup(req.body);
+  const responsePromise = groupService.deleteGroup(req.body);
   responsePromise
     .then((response) => res.send(RESPONSES.deleteGroup[response]))
     .catch((err) => {next(err)});
 });
 
 index.post('/get_group', (req, res, next) => {
-  const responsePromise = GroupService.getGroup(req.body);
+  const responsePromise = groupService.getGroup(req.body);
   responsePromise
     .then((response) => res.send(RESPONSES.getGroup[response.result] + ' ' + response.data))
     .catch((err) => {next(err)});
 });
 
 index.post('/get_groups', (req, res, next) => {
-  const responsePromise = GroupService.getGroups(req.body);
+  const responsePromise = groupService.getGroups(req.body);
   responsePromise
     .then((response) => res.send(RESPONSES.getGroups[response.result] + response.data))
     .catch((err) => {next(err)});

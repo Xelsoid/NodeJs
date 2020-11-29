@@ -95,9 +95,9 @@ module.exports = class UserService {
       let htmlString;
       users.forEach((user) => {
         htmlString +=
-          `<p>User login:${user.getDataValue('login')}; 
-            User id ${user.getDataValue('id')}; 
-            User age ${user.getDataValue('age')}
+          `<p>User login:${user.get('login')}; 
+            User id ${user.get('id')}; 
+            User age ${user.get('age')}
           </p>`;
       });
       return {result: 'usersList', data: htmlString};
@@ -106,10 +106,10 @@ module.exports = class UserService {
   }
 
   async getUser(userData) {
-    const user = await this.user.findByPk(userData.userId);
+    const user = await this.user.findById(userData.userId);
 
      return user
-       ? {result: 'usersExists', data: `<strong>user login : ${user.getDataValue('login')} user age: ${user.getDataValue('age')}</strong>`}
+       ? {result: 'usersExists', data: `<strong>user login : ${user.get('login')} user age: ${user.get('age')}</strong>`}
        : {result: 'usersNotFound', data: ''}
   }
 };

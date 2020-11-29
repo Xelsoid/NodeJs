@@ -2,8 +2,12 @@ const uuid = require('uuid');
 const { Group } = require('../data-access/index');
 
 module.exports = class GroupService {
-  static async createGroup(groupData) {
-    const [group, created] = await Group.findOrCreate({
+  constructor(Group) {
+    this.group = Group;
+  }
+
+  async createGroup(groupData) {
+    const [group, created] = await this.group.findOrCreate({
       where: {
         name: groupData.groupName,
       },
@@ -15,7 +19,7 @@ module.exports = class GroupService {
     if(created) {
       return 'created';
     }
-    await Group.update({
+    await this.group.update({
       permissions: groupData.groupPermissions.split(','),
     }, {
       where: {
@@ -25,8 +29,8 @@ module.exports = class GroupService {
     return 'updated';
   }
 
-  static async deleteGroup(groupData) {
-    const group = await Group.destroy({
+  async deleteGroup(groupData) {
+    const group = await this.group.destroy({
       where: {
         name: groupData.groupName
       }
@@ -34,24 +38,24 @@ module.exports = class GroupService {
     return group ? 'deleted' : 'notExists';
   }
 
-  static async getGroup(groupData) {
-    const group = await Group.findByPk(groupData.groupId);
+  async getGroup(groupData) {
+    const group = await this.group.findById(groupData.groupId);
     return group
-      ? {result: 'groupExists', data: `<strong>group name : ${group.getDataValue('name')}</strong>`}
+      ? {result: 'groupExists', data: `<strong>group name : ${group.get('name')}</strong>`}
       : {result: 'groupNotFound', data: ''}
   }
 
 
-  static async getGroups(groupData) {
-    const groups = await Group.findAll();
+  async getGroups() {
+    const groups = await this.group.findAll();
 
     if(groups) {
       let htmlString;
       groups.forEach((group) => {
         htmlString +=
-          `<p>Group name:${group.getDataValue('name')}; 
-            Group id ${group.getDataValue('id')}; 
-            Group permissions ${group.getDataValue('permissions')}
+          `<p>Group name:${group.get('name')}; 
+            Group id ${group.get('id')}; 
+            Group permissions ${group.get('permissions')}
           </p>`;
       });
       return {result: 'groupsList', data: htmlString};
