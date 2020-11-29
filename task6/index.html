@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    Login (test credentials Anton/qwerty)
+    <form action="/authenticate" method="post">
+        <input name="userName" value="" placeholder="user name">
+        <input name="userPassword" value="" placeholder="user password">
+        <input type="submit" value="Login">
+    </form>
+
+    Create user
+    <form action="/create_user" method="post">
+        <input name="userName" value="" placeholder="user name">
+        <input name="userPassword" value="" placeholder="user password">
+        <input name="userAge" value="" placeholder="user age">
+        <input type="submit" value="Create User">
+    </form>
+
+    Update user
+    <form action="/update_user" method="post">
+        <input name="userName" value="" placeholder="user name">
+        <input name="userPassword" value="" placeholder="user old password">
+        <input name="userNewPassword" value="" placeholder="user new password">
+        <input name="userAge" value="" placeholder="user age">
+        <input type="submit" value="Update User">
+    </form>
+
+    Delete user
+    <form action="/delete_user" method="post">
+        <input name="userName" value="" placeholder="user name">
+        <input name="userPassword" value="" placeholder="user password">
+        <input type="submit" value="Delete User">
+    </form>
+
+    Find user by login
+    <form action="/find_users" method="post">
+        <input name="userName" value="" placeholder="user name">
+        <input name="userLimit" value="" placeholder="user limit">
+        <input type="submit" value="Find Users">
+    </form>
+
+    Get user by ID
+    <form action="/get_user" method="post">
+        <input name="userId" value="" placeholder="user ID">
+        <input type="submit" value="Get User">
+    </form>
+
+    <hr/>
+
+    Create group
+    <form action="/create_group" method="post" id="createGroupForm">
+        <input name="groupName" value="" placeholder="group name">
+        <label>
+            <input type="checkbox" name="read" checked/> Read
+        </label>
+        <label>
+            <input type="checkbox" name="write"/> Write
+        </label>
+        <label>
+            <input type="checkbox" name="delete"/> Delete
+        </label>
+        <label>
+            <input type="checkbox" name="share"/> Share
+        </label>
+        <label>
+            <input type="checkbox" name="upload_files"/> Upload files
+        </label>
+        <input type='hidden' id="groupPermissions" name="groupPermissions" value="">
+        <input type="submit" value="Create group">
+    </form>
+    <script>
+        const groupForm = document.getElementById('createGroupForm');
+        const groupFormElements = groupForm.elements;
+        const groupPermissions = document.getElementById('groupPermissions');
+        groupForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const arr = [];
+          groupFormElements.forEach = Array.prototype.forEach;
+          groupFormElements.forEach((element) => {
+            if(element.checked) {
+              arr.push(element.name);
+            }
+          });
+          groupPermissions.value = arr;
+          groupForm.submit();
+        });
+    </script>
+
+    Update group
+    <form action="/update_group" method="post">
+        <input name="groupName" value="" placeholder="group name">
+        <input type="submit" value="Update group">
+    </form>
+
+    Delete group
+    <form action="/delete_group" method="post">
+        <input name="groupName" value="" placeholder="group name">
+        <input type="submit" value="Remove group">
+    </form>
+
+    Get group by ID
+    <form action="/get_group" method="post">
+        <input name="groupId" value="" placeholder="group ID">
+        <input type="submit" value="Get Group">
+    </form>
+
+    Get all groups
+    <form action="/get_groups" method="post">
+        <input type="submit" value="Get Groups">
+    </form>
+
+    <hr/>
+
+    Add users to Group
+    <form action="/add_users_to_group" method="post">
+        <input name="userId" value="" placeholder="user ID">
+        <input name="groupId" value="" placeholder="group ID">
+        <input type="submit" value="Add users to group">
+    </form>
+
+</body>
+</html>
